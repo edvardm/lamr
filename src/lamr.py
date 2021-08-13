@@ -6,7 +6,6 @@ import os
 import shutil
 import subprocess
 import sys
-from io import IOBase
 from pathlib import Path
 from typing import List
 
@@ -275,7 +274,7 @@ def _filter_includes(include_only, files: List[Path]) -> List[Path]:
     ]
 
 
-def _update_local_copy(args) -> IOBase:
+def _update_local_copy(args) -> None:
     repo = _repo_url(args)
 
     cached_repo = CACHE_DIR / Path(repo).name
