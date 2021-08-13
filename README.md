@@ -1,5 +1,9 @@
 # LAMR
 
+Ain't makefile replacement, but it might help you managing those.
+
+[![asciicast](demo.gif)](demo.gif)
+
 ## Overview
 
 LAMR is simple tool to organize makefiles in such a way that generic rules are separated from project specific ones, and provides means to easily sync common makefile rules, thus reducing duplication.
@@ -9,11 +13,11 @@ provide automation for standard tasks like formatting, linting, deploying withou
 
 ## Details
 
-Projects using LAMR would basically have one project-specific `Makefile` at project root, and one or more generic, shared makefiles in a separate repository. You could do this simply without using any tool, but it would be bothersome to keep manually updating shared makefiles both in the upstream, and also syncing those changes to any other projects using those shared files. This is where LAMR comes in. It allows for quick installation
-of your favorite Makefile rules, and syncing changes between projects and shared makefile repository.
+Projects using LAMR would basically have project-specific `Makefile` at project root, and one or more generic, shared makefiles hosted elsewhere in a separate repository. You could do this without using any tool, but it would be bothersome to manually keep those in sync with local changes and other projects. 
 
-There's a totally usable sample repository with shared makefiles at `https://github.com/edvardm/lamr-makefiles`, but
-you probably want create your own and point `lamr` to that instead.
+This is where LAMR comes in. It allows for quick installation of your favorite Makefile rules, and helps in syncing changes to shared rules.
+
+There's a sample repository with shared makefiles at `https://github.com/edvardm/makefiles`, but you probably want to create your own and point `lamr` to that instead.
 
 ## Requirements
 
