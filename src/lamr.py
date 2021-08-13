@@ -69,6 +69,7 @@ def pull(args):
 
     info = _printer(args)
     debug = _debug(args)
+    notice = compose(info, _fmt_notice)
     updated = 0
 
     debug(f"Using cache {CACHE_DIR}")
@@ -91,9 +92,9 @@ def pull(args):
             _local_sync(upstream_makefile, project_makefile)
             updated += 1
         elif delta_mtime == 0:
-            info(_fmt_notice(f"skipping unchanged {project_makefile}"))
+            notice(f"skipping unchanged {project_makefile}")
         else:
-            info(_fmt_notice(f"{project_makefile} is more recent, skipping"))
+            notice(f"{project_makefile} is more recent, skipping")
 
     info(f"{updated} file(s) updated")
 
@@ -299,6 +300,7 @@ def _update_local_copy(args) -> None:
 
 
 def _cache_remote_repo(args) -> Path:
+    # Cache repo locally if not present already
     repo = _repo_url(args)
     cached_repo = CACHE_DIR / Path(repo).name
 
