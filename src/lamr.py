@@ -1,4 +1,4 @@
-#!/usr/bin/env python3 -X dev
+#!/usr/bin/env python3
 
 import argparse
 import functools
