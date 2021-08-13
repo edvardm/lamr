@@ -55,10 +55,11 @@ getting LAMR is as easy as running `./lamr.sh` at project root.
 
 See `lamr --help` for more info.
 
-## Makefile repository
+## Makefile repositories
 
-There's only these few requirements you need to have so that LAMR recognizes
-that repository properly:
+In order to have those shared makefiles, you need to have a repository for those.
+There's only these few requirements you need to have so that LAMR is able to
+use that repository:
 
 - Project root has subdirectory `makefiles`
 - Makefiles should have `.mk` extension, named according to technology/feature
@@ -69,7 +70,10 @@ As an example, see https://github.com/edvardm/makefiles
 
 Run `make setup test`, ensure all tests are green, and you're good to go.
 
-## Future ideas
+## FAQ
 
-- Instead of directly pushing local changes to shared repository, make it possible to use `lamr` to create PR instead
-- Better error handling
+- **Do I need to change my existing Makefiles?** No, using `include` in your Makefile helps to adopt LAMR by separating more generic rules from project-specific
+- **Can I put other shared things there in addition to makefiles?** LAMR would ignore those for now, but it's pretty much unaware of any make-specific things, so maybe in near future
+- **But I don't want to blindly push things to shared repo** That's not a question. You can use `git add --interactive` though in a repository where you want pull changes to to cherry-pick only those changes you want. See next question too
+- **Can I make PRs to shared repositories instead of just pushing stuff there?** Not yet through LAMR, but that might be useful feature later on
+- **Do I need remote repository for shared files?** No, you can give `--repo` any URL to a repository you have at least read access to, including local repositories
