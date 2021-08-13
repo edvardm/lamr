@@ -197,7 +197,7 @@ def _parse_args():
     parser = argparse.ArgumentParser(
         description="", formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-    parser.add_argument("cmd", choices=("install", "list", "pull", "push", "version"))
+    parser.add_argument("cmd", choices=("install", "pull", "push", "version"))
     parser.add_argument("--force", "-f", action="store_true", help="Force any actions")
     parser.add_argument(
         "--repo",
