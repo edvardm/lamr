@@ -3,3 +3,6 @@ include include/Python.mk
 
 SRC ?= src
 TESTS = $(SRC)/lamr.py
+
+release:
+	poetry run bumpver update
