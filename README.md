@@ -29,6 +29,7 @@ There's a sample repository with shared makefiles at `https://github.com/edvardm
 
 - Bash-compatible shell in a POSIX-compliant environment. At least Linux and MacOS should be fine
 - Python >= 3.7 (3.x should be fine, but haven't tested)
+
 ## Installation
 
 In your project root directory, run
@@ -40,6 +41,7 @@ chmod +x lamr.sh && ./lamr.sh
 
 If you have several developers in your project, you might want to add that script to version control, so that
 getting LAMR is as easy as running `./lamr.sh` at project root.
+
 ## Usage
 
 `lamr <cmd>` where `cmd` is one of the following:
@@ -52,6 +54,16 @@ getting LAMR is as easy as running `./lamr.sh` at project root.
 
 
 See `lamr --help` for more info.
+
+## Makefile repository
+
+There's only these few requirements you need to have so that LAMR recognizes
+that repository properly:
+
+- Project root has subdirectory `makefiles`
+- Makefiles should have `.mk` extension, named according to technology/feature
+
+As an example, see https://github.com/edvardm/makefiles
 
 ## Development
 
