@@ -270,7 +270,7 @@ def _list_makefiles(args):
     if not files:
         raise EmptyResourceDir(resource_path)
 
-    return files
+    return sorted(files)
 
 
 def _filter_includes(include_only, files: List[Path]) -> List[Path]:
