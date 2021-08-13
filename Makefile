@@ -1,7 +1,5 @@
-include include/Python.mk
-include include/Kubernetes.mk
 include include/Common.mk
-include include/Docker.mk
+include include/Python.mk
 
 SRC ?= src
 TESTS = $(SRC)/lamr.py
