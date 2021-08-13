@@ -2,13 +2,13 @@ AUTOFLAKE_FLAGS = --remove-unused-variables --ignore-init-module-imports --recur
 BLACK_FLAGS = --color
 ISORT_FLAGS = --profile black --quiet
 
-MYPY_FLAGS = --ignore-missing-imports
+MYPY_FLAGS = --ignore-missing-imports --pretty
 POETRY_FLAGS = --remove-untracked --no-interaction
 
 VENV ?= .venv
 TIMEOUT ?= 3
 TESTS = tests
-PYTEST_CMD = python -m pytest --color yes
+PYTEST_CMD = poetry run python -m pytest --color yes
 
 # in CI, don't modify things, check only
 ifdef CI
@@ -16,7 +16,6 @@ ifdef CI
 	ISORT_FLAGS += --check
 	BLACK_FLAGS += --diff --check
 else
-	MYPY_FLAGS += --daemon
 	AUTOFLAKE_FLAGS += --in-place
 endif
 
@@ -31,7 +30,7 @@ MIN_LINTER_SCORE = 9.75
 lint: pylint yamllint
 
 fmt: autoflake isort
-	black $(BLACK_FLAGS) $(SRC) $(TESTS)
+	poetry run black $(BLACK_FLAGS) $(SRC) $(TESTS)
 
 setup: deps .sentinel-setup .envrc
 
@@ -42,7 +41,7 @@ test-cov:
 	$(PYTEST_CMD) --timeout 10 --cov $(SRC) --cov-branch $(TESTS)
 
 local-run: setup
-	poetry run python -m $(SRC)
+	@echo "Setting up project"
 
 clean:
 	@find . -type d -name __pycache__ -exec rm -r {} \+
@@ -61,20 +60,20 @@ pylint:
 
 .PHONY: mypy
 mypy: ## Run mypy against source code
-	mypy $(MYPY_FLAGS) $(SRC)
+	poetry run mypy $(MYPY_FLAGS) $(SRC)
 
 .PHONY: autoflake
 autoflake: ## Autoflake source code
 	# autoflake is quite noisy, hence uniq :/
-	autoflake $(AUTOFLAKE_FLAGS) $(SRC) $(TESTS) | uniq
+	poetry run autoflake $(AUTOFLAKE_FLAGS) $(SRC) $(TESTS) | uniq
 
 .PHONY: isort
 isort:  ## isort source code
-	isort $(ISORT_FLAGS) $(SRC)
+	poetry run isort $(ISORT_FLAGS) $(SRC)
 
 .PHONY: pyupgrade
 pyupgrade: ## Run pyupgrade with fixes applicable for 3.7+
-	pyupgrade --py37-plus `git ls-files | grep \.py`
+	poetry run pyupgrade --py37-plus `git ls-files | grep \.py`
 
 $(VENV): ## Create local virtual env dir using venv module
 	python -m venv $(VENV)

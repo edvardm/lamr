@@ -99,7 +99,7 @@ def pull(args):
     info(f"{updated} file(s) updated")
 
 
-def list(args):
+def list(args):  # pylint: disable=redefined-builtin
     info = _printer(args)
     _debug(args)
 
