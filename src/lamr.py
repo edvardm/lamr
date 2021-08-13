@@ -98,6 +98,19 @@ def pull(args):
     info(f"{updated} file(s) updated")
 
 
+def list(args):
+    info = _printer(args)
+    _debug(args)
+
+    info(f"Listing available makefiles in {args.repo}... ")
+    try:
+        for fpath in _list_makefiles(args):
+            print(fpath.name)
+    except EmptyResourceDir:
+        print(_fmt_error(f"No shared makefiles in {args.repo}"))
+        sys.exit(1)
+
+
 def push(args):
     """Push local changes to shared files to upstream"""
 
@@ -196,7 +209,7 @@ def _parse_args():
     parser = argparse.ArgumentParser(
         description="", formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-    parser.add_argument("cmd", choices=("install", "pull", "push", "version"))
+    parser.add_argument("cmd", choices=("install", "list", "pull", "push", "version"))
     parser.add_argument("--force", "-f", action="store_true", help="Force any actions")
     parser.add_argument(
         "--repo",
