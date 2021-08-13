@@ -28,11 +28,8 @@ install_pyscript() {
     install "${tmp}" "${LAMR_BIN}"
 }
 
-echo "Execute bootstrap script..."
+echo "Executing bootstrap script..."
 install_pyscript
-
-"${LAMR_BIN}" install
-
 myname=$(basename "$0")
 
 echo "Bootstrap complete"
@@ -45,4 +42,4 @@ echo "to your ~/.zshrc or ~/.bashrc"
 echo
 echo "It is recommended that you add ./${myname} to version control, so that it is easy to setup for other users."
 echo
-echo "Next run ${LAMR_BIN} --help to see what commands are available."
+echo "Next run '${LAMR_BIN} install --repo <makefile repository url>' to install project Makefiles."
