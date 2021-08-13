@@ -18,7 +18,7 @@ help: ## This help dialog
 
 .PHONY: yamllint
 yamllint: ## Run yamllint
-	(yamllint -f colored .github/**/{*.yaml,*.yml}) || echo "no yaml files found"
+	@(yamllint -f colored .github/**/{*.yaml,*.yml} 2> /dev/null) || echo "no yaml files found"
 
 .envrc:
 	@(test -f .envrc \
