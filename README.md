@@ -6,7 +6,7 @@ Ain't makefile replacement, but it might help you managing those.
 
 ## Overview
 
-LAMR is simple tool to organize makefiles in such a way that generic rules are separated from project specific ones, and provides means to easily sync common makefile rules, thus reducing duplication.
+LAMR is a simple tool to manage makefiles in such a way that generic rules are separated from project specific ones, and provides means to easily sync shared makefiles reducing duplication.
 
 It should be especially useful if you have several projects using same languages/technologies, and want to
 provide automation for standard tasks like formatting, linting, deploying without duplicating lots of code.
@@ -17,12 +17,15 @@ Projects using LAMR would basically have project-specific `Makefile` at project 
 
 This is where LAMR comes in. It allows for quick installation of your favorite Makefile rules, and helps in syncing changes to shared rules.
 
+Design philosophy is to avoid reinventing the wheel, meaning that Makefiles are still
+just plain, old Makefiles, Git is used to manage shared files etc.
+
 There's a sample repository with shared makefiles at `https://github.com/edvardm/makefiles`, but you probably want to create your own and point `lamr` to that instead.
 
 ## Requirements
 
 - Bash-compatible shell in a POSIX-compliant environment. At least Linux and MacOS should be fine
-- Python >= 3.7
+- Python >= 3.7 (3.x should be fine, but haven't tested)
 ## Installation
 
 In your project root directory, run
