@@ -1,0 +1,16 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_size = 4
+indent_style = space
+
+# Tab indentation (no size specified)
+[{Makefile, *.mk}]
+indent_style = tab
+
+# Matches the exact files either package.json or .travis.yml
+[pyproject.toml]
+indent_size = 2
