@@ -17,5 +17,6 @@ repos:
       - id: pylint
         name: pylint
         entry: pylint
+        args: ["--fail-under", "9.75"]
         language: python
         types: [python]
