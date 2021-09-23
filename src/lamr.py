@@ -268,7 +268,7 @@ def _present_file(fpath):
 
 
 def _write_main_makefile(includes):
-    with open("Makefile", "w") as fh:
+    with open("Makefile", "w", encoding="utf-8") as fh:
         for fname in sorted(includes):
             fh.write(f"include {fname}\n")
 
