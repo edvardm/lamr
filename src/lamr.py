@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import configparser
 import functools
 import os
 import shutil
@@ -12,9 +13,11 @@ from typing import List
 RESOURCE_DIR = Path("makefiles")
 DEFAULT_INCLUDE_PATH = Path("include")
 
+HOME = Path(os.environ["HOME"])
 TIMEOUT = int(os.getenv("TIMEOUT", "30"))
-CACHE_DIR = Path(os.environ["HOME"]) / ".cache" / "lamr"
-
+CACHE_DIR = HOME / ".cache" / "lamr"
+XDG_CONFIG_HOME = Path(os.getenv("XDG_CONFIG_HOME", f"{HOME}/.config"))
+CONFIG_DEFAULTS = {}
 __VERSION__ = "2021-04.1001"
 
 
@@ -24,6 +27,13 @@ class EmptyResourceDir(Exception):
 
 def main():
     args = _parse_args()
+    cfg = _parse_config(args)
+
+    args.repository = args.repository or cfg["lamr"].get("repository")
+    if not args.repository:
+        sys.exit(
+            "No repository specified. Use --repository or `repository` setting in config file"
+        )
 
     _dispatch(args.cmd)(args)
 
@@ -103,12 +113,12 @@ def list(args):  # pylint: disable=redefined-builtin
     info = _printer(args)
     _debug(args)
 
-    info(f"Listing available makefiles in {args.repo}... ")
+    info(f"Listing available makefiles in {args.repository}... ")
     try:
         for fpath in _list_makefiles(args):
             print(fpath.name)
     except EmptyResourceDir:
-        print(_fmt_error(f"No shared makefiles in {args.repo}"))
+        print(_fmt_error(f"No shared makefiles in {args.repository}"))
         sys.exit(1)
 
 
@@ -159,7 +169,7 @@ def push(args):
         if added:
             info(
                 _fmt_notice(
-                    f"Adding {len(added)} new files to shared repository {args.repo}"
+                    f"Adding {len(added)} new files to shared repository {args.repository}"
                 )
             )
             new_files = " ".join(str(RESOURCE_DIR / fname) for fname in added)
@@ -211,12 +221,12 @@ def _parse_args():
         description="", formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument("cmd", choices=("install", "list", "pull", "push", "version"))
+    parser.add_argument("--config", type=_present_file, help="Path to config file")
     parser.add_argument("--force", "-f", action="store_true", help="Force any actions")
     parser.add_argument(
-        "--repo",
+        "--repository",
         "-r",
         type=str,
-        required=True,
         help="Repository to get makefiles from",
     )
     parser.add_argument(
@@ -248,6 +258,13 @@ def _parse_args():
     parser.add_argument("--quiet", "-q", action="store_true", help="Be rather quiet")
 
     return parser.parse_args()
+
+
+def _present_file(fpath):
+    if os.path.exists(fpath):
+        return fpath
+
+    sys.exit(f"File {fpath} does not exist, aborting")
 
 
 def _write_main_makefile(includes):
@@ -314,10 +331,10 @@ def _cache_remote_repo(args) -> Path:
 
 
 def _repo_url(args):
-    if args.repo.startswith("git"):
-        return args.repo
+    if args.repository.startswith("git@"):
+        return args.repository
 
-    return f"git@github.com:{args.repo}"
+    return f"git@github.com:{args.repository}"
 
 
 def _sys_exec(args, cmd, *, interactive=False):
@@ -352,6 +369,25 @@ def _fmt_success(msg):
 
 def _fmt_error(msg):
     return f"\u001b[31m{msg}\u001b[0m"
+
+
+def _parse_config(args):
+    cfg_parser = configparser.ConfigParser()
+
+    if args.config:
+        cfg_parser.read(args.config)
+        return cfg_parser
+
+    candidates = [".lamrrc", XDG_CONFIG_HOME / "lamrrc", "~/.lamrrc"]
+    for rcpath in (Path(fpath).expanduser() for fpath in candidates):
+        if rcpath.exists():
+            cfg_parser.read(rcpath)
+            break
+
+    if "lamr" not in cfg_parser:
+        cfg_parser["lamr"] = CONFIG_DEFAULTS
+
+    return cfg_parser
 
 
 def compose(*fns):

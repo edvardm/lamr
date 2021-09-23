@@ -66,6 +66,19 @@ use that repository:
 
 As an example, see https://github.com/edvardm/makefiles
 
+## Configuration
+
+You can configure repository to use for Makefiles in an rc file. These files will be tried in order using the first found:
+
+`.lamrrc` in current directory, `$XDG_CONFIG_HOME/lamrrc` and `$HOME/.lamrrc`.
+
+For now, the only supported key is `lamr.repository`. Eg.
+
+```
+[lamr]
+repository = edvardm/makefiles
+# shortcut for git@github.com:edvardm/makefiles'
+```
 ## Development
 
 Run `make setup test`, ensure all tests are green, and you're good to go.
