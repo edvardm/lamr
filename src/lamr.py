@@ -18,6 +18,9 @@ TIMEOUT = int(os.getenv("TIMEOUT", "30"))
 CACHE_DIR = HOME / ".cache" / "lamr"
 XDG_CONFIG_HOME = Path(os.getenv("XDG_CONFIG_HOME", f"{HOME}/.config"))
 CONFIG_DEFAULTS = {}
+
+_GITHUB_PREFIX = "git@github.com"
+
 __VERSION__ = "2021-04.1001"
 
 
@@ -319,7 +322,7 @@ def _update_local_copy(args) -> None:
 def _cache_remote_repo(args) -> Path:
     # Cache repo locally if not present already
     repo = _repo_url(args)
-    cached_repo = CACHE_DIR / Path(repo).name
+    cached_repo = CACHE_DIR / _local_repo_path(repo)
 
     if not cached_repo.is_dir():
         _sys_exec(
@@ -331,10 +334,14 @@ def _cache_remote_repo(args) -> Path:
 
 
 def _repo_url(args):
-    if args.repository.startswith("git@"):
+    if args.repository.startswith(_GITHUB_PREFIX):
         return args.repository
 
-    return f"git@github.com:{args.repository}"
+    return f"{_GITHUB_PREFIX}:{args.repository}"
+
+
+def _local_repo_path(repo_url):
+    return Path(str(repo_url).split(":", 1)[-1].replace(".git", ""))
 
 
 def _sys_exec(args, cmd, *, interactive=False):
@@ -415,3 +422,8 @@ def test_filter_includes_with_multiple_values():
         "Common.mk",
         "Rust.mk",
     ]
+
+
+def test_local_repo_path():
+    assert _local_repo_path(Path("user/repo")) == Path("user/repo")
+    assert _local_repo_path(Path("git@github.com:user/repo.git")) == Path("user/repo")
