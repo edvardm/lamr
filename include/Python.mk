@@ -19,7 +19,7 @@ else
 	AUTOFLAKE_FLAGS += --in-place
 endif
 
-LINT_CMD = pylint -j0 --fail-under $(MIN_LINTER_SCORE) --output-format colorized
+LINT_CMD = poetry run pylint -j0 --fail-under $(MIN_LINTER_SCORE) --output-format colorized
 
 # change these to your liking
 SRC ?= src
