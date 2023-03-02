@@ -216,9 +216,7 @@ def _dispatch(fun):
 
 def _parse_args():
     def multi_value_str(string) -> List[str]:
-        if not string:
-            return []
-        return [s.strip() for s in string.split(",")]
+        return [s.strip() for s in string.split(",")] if string else []
 
     parser = argparse.ArgumentParser(
         description="", formatter_class=argparse.ArgumentDefaultsHelpFormatter
@@ -287,11 +285,10 @@ def _list_makefiles(args):
     cached_repo = _cache_remote_repo(args)
     resource_path = Path(cached_repo) / RESOURCE_DIR
 
-    files = _filter_includes(args.only, resource_path.glob("*.mk"))
-    if not files:
+    if files := _filter_includes(args.only, resource_path.glob("*.mk")):
+        return sorted(files)
+    else:
         raise EmptyResourceDir(resource_path)
-
-    return sorted(files)
 
 
 def _filter_includes(include_only, files: List[Path]) -> List[Path]:
@@ -355,15 +352,11 @@ def _sys_exec(args, cmd, *, interactive=False):
 
 
 def _printer(args):
-    if args.quiet:
-        return lambda _, **kwargs: None
-    return print
+    return (lambda _, **kwargs: None) if args.quiet else print
 
 
 def _debug(args):
-    if args.debug:
-        return print
-    return lambda _, **kwargs: None
+    return print if args.debug else (lambda _, **kwargs: None)
 
 
 def _fmt_notice(msg):
